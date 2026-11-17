@@ -105,7 +105,7 @@
       const url = resourceUrl(resource.link);
       const pdf = asset?.type === 'application/pdf' || /\.pdf$/i.test(asset?.name || '');
       return `<div class="resource"><div><strong>${resource.title}</strong><span>${esc(file ? asset.name : resource.note)}</span></div><div>${file ? `<a href="${esc(file)}" ${resource.kind === 'document' && pdf ? 'target="_blank" rel="noopener"' : `download="${esc(asset.name)}"`}>${resource.kind === 'document' && pdf ? '预览 PDF ↗' : '下载文件 ↓'}</a>${resource.kind === 'document' && pdf ? ` <a href="${esc(file)}" download="${esc(asset.name)}">下载 ↓</a>` : ''}` : ''}${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${resource.kind === 'demo' ? '开始试玩' : resource.kind === 'video' ? '观看视频' : '阅读文档'} ↗</a>` : ''}${!file && !url ? '<span class="not-ready">待补充</span>' : ''}</div></div>`;
-    }).join('')}</div><p class="detail-footnote">${project.documentPreview ? '封面取自实际 PDF 文档。' : project.category === 'demo' ? '书页插画为概念示意。原型内容以实际试玩为准。' : ''}${project.category === 'analysis' ? '个人学习研究，相关内容版权归原厂所有，非商业展示。' : ''}</p></div>`;
+    }).join('')}</div><p class="detail-footnote">${project.documentPreview ? project.category === 'design' ? '封面标题已按游戏新名称更新，完整内容见 PDF。' : '封面取自实际 PDF 文档。' : project.category === 'demo' ? '书页插画为概念示意。原型内容以实际试玩为准。' : ''}${project.category === 'analysis' ? '个人学习研究，相关内容版权归原厂所有，非商业展示。' : ''}</p></div>`;
     $('#detail-dialog').showModal();
   }
   function projectOptions() {
@@ -214,7 +214,7 @@
     try {
       if (location.protocol === 'file:') throw new Error('导出需要本地预览服务。请双击“启动预览.cmd”，在打开的页面中导出。');
       const files = new Map();
-      const baseFiles = ['index.html', 'styles.css', 'app.js', 'portfolio-storage.js', 'README.md', 'play.html', 'preview_server.py', '启动预览.cmd', 'assets/design-page.png', 'assets/analysis-page.png', 'assets/book-demo.svg', ...(state.bundledFiles || [])];
+      const baseFiles = ['index.html', 'styles.css', 'app.js', 'portfolio-storage.js', 'README.md', 'play.html', 'preview_server.py', '启动预览.cmd', 'assets/design-page-v2.png', 'assets/analysis-page.png', 'assets/book-demo.svg', ...(state.bundledFiles || [])];
       await Promise.all(baseFiles.map(async name => { const response = await fetch(name, {cache:'no-store'}); if (!response.ok) throw new Error('读取文件失败：' + name); files.set(name, await response.blob()); }));
       const published = clone(state);
       published.version = 1;
@@ -311,6 +311,7 @@
       if (draft && draft.profile && Array.isArray(draft.projects) && draft.projects.length) {
         state = {...state, ...draft};
         state.projects.forEach(project => {
+          if (project.cover === 'assets/design-page.png') project.cover = 'assets/design-page-v2.png';
           if (/^(?:dont|don['‘’]t) let me (?:fall|down)(!)?$/i.test(project.title)) project.title = 'Don’t Let Me Down' + (project.title.endsWith('!') ? '!' : '');
           const asset = project.assets?.document;
           if (asset?.name === 'Dont Let Me Fall_详细游戏策划案_v0.3.pdf') asset.name = 'Don’t Let Me Down_详细游戏策划案_v0.3.pdf';

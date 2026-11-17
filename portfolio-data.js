@@ -19,7 +19,7 @@ window.PORTFOLIO_DATA = {
     {
       id: "dont-let-me-fall-design", title: "Don’t Let Me Down", subtitle: "游戏策划案 / v0.3 / 30 PAGES", category: "design",
       description: "以书页世界为舞台的 2D 俯视角探索游戏设计。在揭开迷雾、冥想消化情绪与承担压力之间选择路线，让跨轮成长承接角色重新建立信心的过程。",
-      tags: ["核心循环", "情绪与压力", "跨轮成长"], cover: "assets/design-page.png", documentPreview: true, pageCount: 30,
+      tags: ["核心循环", "情绪与压力", "跨轮成长"], cover: "assets/design-page-v2.png", documentPreview: true, pageCount: 30,
       notes: [
         "四象限书页地图：草稿、进度、排名与考试形成探索环路，各区探索进度与最终整页揭示相衔接。",
         "冥想与情绪消化：扩大视野、主动处理情绪，也允许绕开风险，让探索与压力选择产生不同路线。",
