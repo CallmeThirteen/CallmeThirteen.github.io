@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f7fbff"><link rel="icon" href="data:,"><title>Don’t Let Me Down! · 网页试玩</title>
+<style>
+:root{color-scheme:light;--blue:#267dad;--ink:#29465c;--line:#dcebf4}*{box-sizing:border-box}body{margin:0;background:#f6faff;font:14px/1.7 "Segoe UI","Microsoft YaHei",sans-serif;color:var(--ink)}header{min-height:78px;padding:15px 4vw;display:flex;align-items:center;gap:25px;border-bottom:1px solid var(--line);background:#fff}header>a{color:var(--blue);text-decoration:none;font-size:13px}header h1{font-size:17px;font-weight:600;margin:0}header p{font-size:11px;color:#6c8799;margin:0}.tools{margin-left:auto;display:flex;gap:10px}button{border:1px solid #c3deed;background:#fff;border-radius:6px;padding:9px 16px;color:var(--blue);font:inherit;font-size:12px;cursor:pointer}button:hover{background:#eaf6fd}button:focus-visible,a:focus-visible{outline:2px solid #368aba;outline-offset:4px}.stage{margin:25px auto 16px;max-width:1280px;width:calc(100% - 48px);aspect-ratio:16/9;min-height:380px;background:#eaf5fc;border:1px solid #d5e8f3;border-radius:12px;overflow:hidden;position:relative;display:grid;place-items:center}.stage:fullscreen{width:100%;height:100%;border:0;border-radius:0;margin:0}.stage:fullscreen .exit-fullscreen{display:block}iframe{border:0;width:100%;height:100%;position:absolute;inset:0;display:none;background:#172231}.start-screen{text-align:center;padding:28px;max-width:560px}.start-screen .label{font:10px Consolas,monospace;letter-spacing:.18em;color:#698a9f}.start-screen h2{font-size:clamp(26px,4vw,46px);line-height:1.3;letter-spacing:.01em;margin:20px 0;color:#2c698c}.start-screen p{font-size:13px;color:#6c8292;margin:15px 0 25px}.start-screen button{background:#2f82b0;color:#fff;border:0;padding:13px 30px;font-size:14px}.notice{width:calc(100% - 48px);max-width:1280px;margin:0 auto 25px;font-size:12px;color:#688294;display:flex;justify-content:space-between;gap:25px}.notice p{margin:0}.exit-fullscreen{display:none;position:absolute;right:14px;top:12px;z-index:3;background:#fffD}#error{color:#ad5878}footer{text-align:center;padding:16px 24px 24px;color:#7891a1;font-size:11px;border-top:1px solid var(--line)}@media(max-width:700px){header{gap:14px;flex-wrap:wrap;padding:14px 20px}header h1{font-size:15px}.tools{width:100%;margin:0}.stage{width:calc(100% - 24px);min-height:300px;margin-top:13px;aspect-ratio:4/3}.notice{width:calc(100% - 32px);flex-direction:column;gap:9px}.start-screen h2{font-size:30px}.start-screen p{font-size:12px}}
+</style></head>
+<body><header><a href="index.html#projects">← 返回作品集</a><div><h1>Don’t Let Me Down!</h1><p>Godot 网页原型 · 书页世界</p></div><div class="tools"><button id="reload" hidden>重新加载</button><button id="fullscreen">全屏体验 ↗</button></div></header>
+<main><div class="stage" id="game-stage"><div class="start-screen" id="start-screen"><span class="label">PLAYABLE PROTOTYPE / GODOT WEB</span><h2>走进书页，<br>体验一个设计想法。</h2><p>建议使用桌面浏览器与键盘。首次加载约 40 MB，<br>点击后开始加载，游戏内可查看操作提示。</p><button id="start-game">加载并开始试玩 →</button><p id="error" role="alert"></p></div><iframe id="game-frame" title="Don’t Let Me Down! 游戏 Demo" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe><button class="exit-fullscreen" id="exit-fullscreen">退出全屏 ×</button></div><div class="notice"><p>当前为开发原型，部分中文存在方块显示，字体资源仍待完善。<br>手机端暂未针对触控优化，建议使用键鼠体验。</p><p id="status" role="status">资源仅在点击开始后加载。</p></div></main>
+<footer>本 Demo 仅作个人学习研究用途 · © 2026 邓春斌 · 使用 AI 辅助开发</footer>
+<script>
+const stage = document.getElementById('game-stage');
+const frame = document.getElementById('game-frame');
+document.getElementById('start-game').addEventListener('click', () => {
+  if (location.protocol === 'file:') { document.getElementById('error').textContent = '请通过本地预览服务或 GitHub Pages 打开试玩页。'; return; }
+  frame.src = 'demo/DontLetMeDown_demo.html';
+  frame.style.display = 'block';
+  document.getElementById('start-screen').hidden = true;
+  document.getElementById('reload').hidden = false;
+  document.getElementById('status').textContent = '正在启动游戏，请等待加载画面完成。';
+});
+document.getElementById('reload').addEventListener('click', () => { frame.src = 'demo/DontLetMeDown_demo.html'; document.getElementById('status').textContent = '正在重新启动游戏。'; });
+document.getElementById('fullscreen').addEventListener('click', async () => { try { if (!document.fullscreenElement) await stage.requestFullscreen(); else await document.exitFullscreen(); } catch { document.getElementById('status').textContent = '当前环境不支持全屏，可继续在页面中试玩。'; } });
+document.getElementById('exit-fullscreen').addEventListener('click', () => document.exitFullscreen());
+frame.addEventListener('load', () => { if (frame.getAttribute('src')) document.getElementById('status').textContent = '游戏页面已打开，若仍显示进度条请继续等待。'; });
+</script></body></html>
