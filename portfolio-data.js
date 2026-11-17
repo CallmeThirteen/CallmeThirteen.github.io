@@ -11,9 +11,9 @@ window.PORTFOLIO_DATA = {
     github: "https://github.com/CallmeThirteen"
   },
   bundledFiles: [
-    "demo/DontLetMeDown_demo.html", "demo/DontLetMeDown_demo.js", "demo/DontLetMeDown_demo.wasm", "demo/DontLetMeDown_demo.pck",
-    "demo/DontLetMeDown_demo.png", "demo/DontLetMeDown_demo.icon.png", "demo/DontLetMeDown_demo.apple-touch-icon.png",
-    "demo/DontLetMeDown_demo.audio.worklet.js", "demo/DontLetMeDown_demo.audio.position.worklet.js"
+    "demo/dontletmego_demo.html", "demo/dontletmego_demo.js", "demo/dontletmego_demo.wasm", "demo/dontletmego_demo.pck",
+    "demo/dontletmego_demo.png", "demo/dontletmego_demo.icon.png", "demo/dontletmego_demo.apple-touch-icon.png",
+    "demo/dontletmego_demo.audio.worklet.js", "demo/dontletmego_demo.audio.position.worklet.js"
   ],
   projects: [
     {
@@ -38,9 +38,9 @@ window.PORTFOLIO_DATA = {
       notes: [
         "点击“在线试玩”进入独立试玩页，再点击加载按钮启动原型，游戏不会在作品集首页自动运行。",
         "建议使用桌面浏览器和键盘操作；操作方式见游戏提示。",
-        "首次需要加载约 40 MB 的游戏资源，请等待进度完成。",
+        "首次需要加载约 54 MB 的游戏资源（包含中文字体），请等待进度完成。",
         "当前提供的是开发原型，与策划案 v0.3 的完整规划范围可能不同。",
-        "当前网页导出的部分中文存在方块显示，玩法画面可加载，字体资源仍待完善。"
+        "网页导出已内置中文字体，使用键鼠体验；手机端暂未针对触控优化。"
       ],
       documentUrl: "", demoUrl: "play.html", videoUrl: "", assets: {}
     },

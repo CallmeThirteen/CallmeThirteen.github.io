@@ -41,7 +41,7 @@ uploads/
 demo/                  # 保持整个目录及文件名不变
 ```
 
-`demo/DontLetMeDown_demo.wasm` 约 38 MB，超过 GitHub 网页上传的 25 MiB 单文件限制。请通过 Git 命令行或 GitHub Desktop 提交整个网站；不要只上传 HTML，也不要把 ZIP 本身当网页提交。[GitHub 官方文件上传说明](https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository)。
+`demo/dontletmego_demo.wasm` 约 38 MB，超过 GitHub 网页上传的 25 MiB 单文件限制。请通过 Git 命令行或 GitHub Desktop 提交整个网站；不要只上传 HTML，也不要把 ZIP 本身当网页提交。[GitHub 官方文件上传说明](https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository)。
 
 仓库 **Settings → Pages** 若使用分支发布，选择存放文件的分支及 **/ (root)**；已有配置时保留并更新它对应的目录。等待 Pages 部署成功后，通过设置页确认发布地址。预期主页为 `https://callmethirteen.github.io/`，在部署完成前不能据此认为网站已上线。
 
@@ -58,8 +58,9 @@ demo/                  # 保持整个目录及文件名不变
 ## Demo 当前状态
 
 - 已接入完整 Godot Web 导出，单线程版本，无需跨域隔离头即可在本地加载。
-- 首次加载约 40 MB，建议使用桌面浏览器与键鼠。
-- 原始导出存在部分中文显示为方块的问题。作品集与试玩页已说明此限制，未改写用户的 PCK 或游戏逻辑。后续需在 Godot 项目中补全中文字体并重新导出，再替换 `demo/` 全目录。
+- 首次加载约 54 MB，建议使用桌面浏览器与键鼠。
+- 已接入用户重新导出的中文字体版本，包含 Noto Sans SC 字体和自定义 Theme。当前入口为 `demo/dontletmego_demo.html`，必须连同同前缀的全部 9 个文件一起发布。
+- 推送前先提交新资源；仅把文件放进暂存区不会上传到 GitHub。重新导出后，试玩入口和 `portfolio-data.js` 的 `bundledFiles` 清单也必须同步指向实际文件名，包含大小写。
 - 原型与策划 v0.3 的完整规划范围可能不同。网站展示名称统一为 Don’t Let Me Down；源文档和游戏内容保留原文件。
 
 ## 页脚声明
