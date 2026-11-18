@@ -69,7 +69,8 @@
     if (profile.wechat) links.push(`<div class="contact-item"><span class="contact-label">微信</span><span class="contact-value">${esc(profile.wechat)}</span><button class="copy-contact" data-copy-contact="wechat" aria-label="复制微信号">复制</button></div>`);
     if (externalUrl(profile.github)) links.push(`<div class="contact-item"><span class="contact-label">GitHub</span><a class="contact-value" href="${esc(externalUrl(profile.github))}" target="_blank" rel="noopener noreferrer">${esc(profile.github.replace(/^https?:\/\//, ''))}</a><span aria-hidden="true">↗</span></div>`);
     const resume = resourceUrl(profile.resumeUrl);
-    if (resume) links.push(`<div class="resume-actions"><a class="button primary small" href="${esc(resume)}" target="_blank" rel="noopener noreferrer">在线查看简历 <span aria-hidden="true">↗</span></a><a class="button small" href="${esc(resume)}" download="${esc(profile.name)}-个人简历.pdf">下载简历 <span aria-hidden="true">↓</span></a></div>`);
+    const resumePreview = profile.resumeUrl === 'uploads/deng-chunbin-resume.pdf' ? 'resume.html' : resume;
+    if (resume) links.push(`<div class="resume-actions"><a class="button primary small" href="${esc(resumePreview)}" target="_blank" rel="noopener noreferrer">在线查看简历 <span aria-hidden="true">↗</span></a><a class="button small" href="${esc(resume)}" download="${esc(profile.name)}-个人简历.pdf">下载简历 <span aria-hidden="true">↓</span></a></div>`);
     $('#contact-links').innerHTML = (links.length ? links.join('') : '<p class="field-help">联系方式待补充</p>') + '<p class="contact-feedback" role="status" aria-live="polite"></p>';
   }
   function renderProjects() {
@@ -222,6 +223,7 @@
       const baseFiles = ['index.html', 'styles.css', 'app.js', 'portfolio-storage.js', 'README.md', 'play.html', 'preview_server.py', '启动预览.cmd', 'assets/design-page-v2.png', 'assets/analysis-page.png', 'assets/book-demo.svg', ...(state.bundledFiles || [])];
       const resumePath = localPath(state.profile.resumeUrl);
       if (resumePath) baseFiles.push(resumePath);
+      if (resumePath === 'uploads/deng-chunbin-resume.pdf') baseFiles.push('resume.html', 'assets/resume-preview.png');
       await Promise.all(baseFiles.map(async name => { const response = await fetch(name, {cache:'no-store'}); if (!response.ok) throw new Error('读取文件失败：' + name); files.set(name, await response.blob()); }));
       const published = clone(state);
       published.version = 1;
