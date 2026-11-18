@@ -7,7 +7,10 @@ window.PORTFOLIO_DATA = {
     body: "拥有软件工程背景，目前在早稻田大学攻读硕士，预计2027年毕业。我用策划文档梳理规则，用 Godot 原型验证想法，也通过游戏拆解理解设计收益与体验代价，希望在清晰的逻辑与有趣的体验之间找到自己的答案。",
     education: "早稻田大学 · 硕士在读 / 2027届",
     direction: "游戏系统策划 / 玩法策划",
-    email: "",
+    email: "chunbindeng9@gmail.com",
+    wechat: "dcb13806963215",
+    resumeUrl: "uploads/deng-chunbin-resume.pdf",
+    contactVersion: 1,
     github: "https://github.com/CallmeThirteen"
   },
   bundledFiles: [

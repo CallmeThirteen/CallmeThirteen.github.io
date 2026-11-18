@@ -65,9 +65,12 @@
     $('#footer-name').textContent = profile.name;
     document.title = profile.name + ' — 游戏策划作品集';
     const links = [];
-    if (profile.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) links.push(`<a href="mailto:${esc(profile.email)}">${esc(profile.email)} <span>↗</span></a>`);
-    if (externalUrl(profile.github)) links.push(`<a href="${esc(externalUrl(profile.github))}" target="_blank" rel="noopener noreferrer">GitHub / ${esc(profile.name)} <span>↗</span></a>`);
-    $('#contact-links').innerHTML = links.length ? links.join('') : '<p class="field-help">联系方式待补充</p>';
+    if (profile.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email)) links.push(`<div class="contact-item"><span class="contact-label">邮箱</span><a class="contact-value" href="mailto:${esc(profile.email)}">${esc(profile.email)}</a><button class="copy-contact" data-copy-contact="email" aria-label="复制邮箱地址">复制</button></div>`);
+    if (profile.wechat) links.push(`<div class="contact-item"><span class="contact-label">微信</span><span class="contact-value">${esc(profile.wechat)}</span><button class="copy-contact" data-copy-contact="wechat" aria-label="复制微信号">复制</button></div>`);
+    if (externalUrl(profile.github)) links.push(`<div class="contact-item"><span class="contact-label">GitHub</span><a class="contact-value" href="${esc(externalUrl(profile.github))}" target="_blank" rel="noopener noreferrer">${esc(profile.github.replace(/^https?:\/\//, ''))}</a><span aria-hidden="true">↗</span></div>`);
+    const resume = resourceUrl(profile.resumeUrl);
+    if (resume) links.push(`<div class="resume-actions"><a class="button primary small" href="${esc(resume)}" target="_blank" rel="noopener noreferrer">在线查看简历 <span aria-hidden="true">↗</span></a><a class="button small" href="${esc(resume)}" download="${esc(profile.name)}-个人简历.pdf">下载简历 <span aria-hidden="true">↓</span></a></div>`);
+    $('#contact-links').innerHTML = (links.length ? links.join('') : '<p class="field-help">联系方式待补充</p>') + '<p class="contact-feedback" role="status" aria-live="polite"></p>';
   }
   function renderProjects() {
     const projects = state.projects.filter(project => filter === 'all' || project.category === filter);
@@ -130,7 +133,7 @@
     }
   }
   function loadProfileForm() {
-    for (const key of ['name', 'intro', 'about', 'body', 'education', 'direction', 'email', 'github']) $('#profile-' + key).value = state.profile[key] || '';
+    for (const key of ['name', 'intro', 'about', 'body', 'education', 'direction', 'email', 'wechat', 'github', 'resumeUrl']) $('#profile-' + key).value = state.profile[key] || '';
     $('#profile-error').textContent = '';
   }
   async function openManager() { await ready; projectOptions(); loadProjectForm(); loadProfileForm(); $('#manager-dialog').showModal(); }
@@ -189,9 +192,11 @@
     button.disabled = true;
     try {
       const next = clone(state);
-      for (const key of ['name', 'intro', 'about', 'body', 'education', 'direction', 'email', 'github']) next.profile[key] = $('#profile-' + key).value.trim();
+      for (const key of ['name', 'intro', 'about', 'body', 'education', 'direction', 'email', 'wechat', 'github', 'resumeUrl']) next.profile[key] = $('#profile-' + key).value.trim();
       if (!next.profile.name || !next.profile.intro) throw new Error('请填写署名与首页简介。');
       if (next.profile.github && !externalUrl(next.profile.github)) throw new Error('GitHub 链接必须以 https:// 或 http:// 开头。');
+      if (next.profile.resumeUrl && !resourceUrl(next.profile.resumeUrl)) throw new Error('简历链接必须是 https:// 地址或 uploads/ 下的站内路径。');
+      next.profile.contactVersion = 1;
       await persist(next);
       $('#profile-error').textContent = '';
       toast('个人资料已保存到当前浏览器。');
@@ -215,6 +220,8 @@
       if (location.protocol === 'file:') throw new Error('导出需要本地预览服务。请双击“启动预览.cmd”，在打开的页面中导出。');
       const files = new Map();
       const baseFiles = ['index.html', 'styles.css', 'app.js', 'portfolio-storage.js', 'README.md', 'play.html', 'preview_server.py', '启动预览.cmd', 'assets/design-page-v2.png', 'assets/analysis-page.png', 'assets/book-demo.svg', ...(state.bundledFiles || [])];
+      const resumePath = localPath(state.profile.resumeUrl);
+      if (resumePath) baseFiles.push(resumePath);
       await Promise.all(baseFiles.map(async name => { const response = await fetch(name, {cache:'no-store'}); if (!response.ok) throw new Error('读取文件失败：' + name); files.set(name, await response.blob()); }));
       const published = clone(state);
       published.version = 1;
@@ -252,6 +259,22 @@
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
   }));
   $('#project-grid').addEventListener('click', event => { const button = event.target.closest('[data-detail]'); if (button) openDetail(button.dataset.detail); });
+  $('#contact-links').addEventListener('click', async event => {
+    const button = event.target.closest('[data-copy-contact]');
+    if (!button) return;
+    const key = button.dataset.copyContact;
+    if (!['email', 'wechat'].includes(key)) return;
+    const feedback = $('.contact-feedback', $('#contact-links'));
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(state.profile[key]);
+      feedback.dataset.state = 'success';
+      feedback.textContent = key === 'wechat' ? '微信号已复制，可在微信中搜索添加。' : '邮箱地址已复制。';
+    } catch {
+      feedback.dataset.state = 'error';
+      feedback.textContent = '暂时无法自动复制，请选中上方' + (key === 'wechat' ? '微信号' : '邮箱地址') + '手动复制。';
+    }
+  });
   $$('[data-filter]').forEach(button => button.addEventListener('click', () => {
     filter = button.dataset.filter;
     $$('[data-filter]').forEach(item => { const selected = item === button; item.classList.toggle('selected', selected); item.setAttribute('aria-pressed', selected); });
@@ -309,7 +332,12 @@
     try {
       const draft = await storage?.load();
       if (draft && draft.profile && Array.isArray(draft.projects) && draft.projects.length) {
-        state = {...state, ...draft};
+        const defaults = state.profile;
+        state = {...state, ...draft, profile:{...defaults, ...draft.profile}};
+        if (!draft.profile.contactVersion) {
+          for (const key of ['email', 'wechat', 'resumeUrl']) if (!draft.profile[key]) state.profile[key] = defaults[key];
+          state.profile.contactVersion = 1;
+        }
         state.projects.forEach(project => {
           if (project.cover === 'assets/design-page.png') project.cover = 'assets/design-page-v2.png';
           if (/^(?:dont|don['‘’]t) let me (?:fall|down)(!)?$/i.test(project.title)) project.title = 'Don’t Let Me Down' + (project.title.endsWith('!') ? '!' : '');
